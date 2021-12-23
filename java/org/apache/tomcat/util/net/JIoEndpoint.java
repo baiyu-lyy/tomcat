@@ -214,6 +214,7 @@ public class JIoEndpoint extends AbstractEndpoint<Socket> {
 
                 try {
                     //if we have reached max connections, wait
+                    //limitLatch 获取连接 如果带到最大连接 则处于等待状态 采用AQS的方式实现
                     countUpOrAwaitConnection();
 
                     Socket socket = null;
@@ -234,6 +235,7 @@ public class JIoEndpoint extends AbstractEndpoint<Socket> {
                     // Configure the socket
                     if (running && !paused && setSocketOptions(socket)) {
                         // Hand this socket off to an appropriate processor
+                        // 获取套接字 扔到线程池中
                         if (!processSocket(socket)) {
                             countDownConnection();
                             // Close socket right away
@@ -304,6 +306,7 @@ public class JIoEndpoint extends AbstractEndpoint<Socket> {
 
                     try {
                         // SSL handshake
+                        // SSL处理 如果是HTTP请求不做任何处理 HTTPS请求会做处理
                         serverSocketFactory.handshake(socket.getSocket());
                     } catch (Throwable t) {
                         ExceptionUtils.handleThrowable(t);

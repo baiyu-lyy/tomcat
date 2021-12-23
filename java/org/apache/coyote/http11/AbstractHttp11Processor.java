@@ -1102,10 +1102,13 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                 httpUpgradeHandler == null && !endpoint.isPaused()) {
 
             // Parsing the request header
+            // 开始解析请求头
             try {
+                // 设置解析请求行的超时时间
                 setRequestLineReadTimeout();
 
                 if (!getInputBuffer().parseRequestLine(keptAlive)) {
+                    //设置连接如何处理不完整的请求行读取  HTTP11Processor 阻塞模式下直接返回false
                     if (handleIncompleteRequestLineRead()) {
                         break;
                     }
@@ -1123,10 +1126,13 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                 } else {
                     keptAlive = true;
                     // Set this every time in case limit has been changed via JMX
+                    // 设置最大的请求头数量 默认是100  如果小于0 则表示没有限制
                     request.getMimeHeaders().setLimit(endpoint.getMaxHeaderCount());
+                    //设置cookie的最大数量限制 默认时200
                     request.getCookies().setLimit(getMaxCookieCount());
                     // Currently only NIO will ever return false here
                     // Don't parse headers for HTTP/0.9
+                    //解析请求头
                     if (!http09 && !getInputBuffer().parseHeaders()) {
                         // We've read part of the request, don't recycle it
                         // instead associate it with the socket
@@ -1198,6 +1204,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             if (!getErrorState().isError()) {
                 try {
                     rp.setStage(org.apache.coyote.Constants.STAGE_SERVICE);
+                    // 采用适配器的方式 执行Engine组件
                     adapter.service(request, response);
                     // Handle when the response was committed before a serious
                     // error occurred.  Throwing a ServletException should both
