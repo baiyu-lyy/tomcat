@@ -60,13 +60,16 @@ public class Http11Processor extends AbstractHttp11Processor<Socket> {
 
         httpParser = new HttpParser(relaxedPathChars, relaxedQueryChars);
 
+        //输入缓冲装置初始化
         inputBuffer = new InternalInputBuffer(request, headerBufferSize, rejectIllegalHeader,
                 httpParser);
         request.setInputBuffer(inputBuffer);
 
+        //输出缓冲装置初始化
         outputBuffer = new InternalOutputBuffer(response, headerBufferSize);
         response.setOutputBuffer(outputBuffer);
 
+        //初始化拦截器
         initializeFilters(maxTrailerSize, allowedTrailerHeaders, maxExtensionSize, maxSwallowSize);
     }
 

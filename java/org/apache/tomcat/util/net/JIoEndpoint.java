@@ -220,7 +220,7 @@ public class JIoEndpoint extends AbstractEndpoint<Socket> {
                     Socket socket = null;
                     try {
                         // Accept the next incoming connection from the server
-                        // socket
+                        // socket 获取套接字
                         socket = serverSocketFactory.acceptSocket(serverSocket);
                     } catch (IOException ioe) {
                         countDownConnection();
