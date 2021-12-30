@@ -641,6 +641,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel,SocketChannel> 
             selector.wakeup();
         }
 
+        //添加事件 然后唤醒执行select(),select(long)方法阻塞的线程
         private void addEvent(PollerEvent event) {
             events.offer(event);
             if (wakeupCounter.incrementAndGet() == 0) {
@@ -694,11 +695,13 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel,SocketChannel> 
                     socketWrapper.close();
                 } else if (interestOps == OP_REGISTER) {
                     try {
+                        //注册读事件
                         sc.register(getSelector(), SelectionKey.OP_READ, socketWrapper);
                     } catch (Exception x) {
                         log.error(sm.getString("endpoint.nio.registerFail"), x);
                     }
                 } else {
+                    //获取当前socketChannel的操作类型
                     final SelectionKey key = sc.keyFor(getSelector());
                     if (key == null) {
                         // The key was cancelled (e.g. due to socket closure)
@@ -796,8 +799,10 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel,SocketChannel> 
                         if (wakeupCounter.getAndSet(-1) > 0) {
                             // If we are here, means we have other stuff to do
                             // Do a non blocking select
+                            //非阻塞的获取selectKey的数量
                             keyCount = selector.selectNow();
                         } else {
+                            //阻塞的获取当前的的selectKey数量
                             keyCount = selector.select(selectorTimeout);
                         }
                         wakeupCounter.set(0);

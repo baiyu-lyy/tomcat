@@ -73,6 +73,7 @@ public class Acceptor<U> implements Runnable {
 
         try {
             // Loop until we receive a shutdown command
+            // 收到shutdown命令
             while (!stopCalled) {
 
                 // Loop if endpoint is paused.
@@ -147,6 +148,7 @@ public class Acceptor<U> implements Runnable {
                     if (!stopCalled && !endpoint.isPaused()) {
                         // setSocketOptions() will hand the socket off to
                         // an appropriate processor if successful
+                        // 注册 socketChannel到poller队列中 events
                         if (!endpoint.setSocketOptions(socket)) {
                             endpoint.closeSocket(socket);
                         }
