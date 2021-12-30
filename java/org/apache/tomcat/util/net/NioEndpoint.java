@@ -295,24 +295,29 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel,SocketChannel> 
                         socketProperties.getEventCache());
             }
             if (socketProperties.getBufferPool() != 0) {
+                //事件列表
                 nioChannels = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
                         socketProperties.getBufferPool());
             }
 
             // Create worker collection
+            // 创建线程池  默认为最大200，最小10
             if (getExecutor() == null) {
                 createExecutor();
             }
 
+            //初始化LimitLatch 连接数控制器 默认为8*1024
             initializeConnectionLatch();
 
             // Start poller thread
+            // 初始化轮询器 并启动
             poller = new Poller();
             Thread pollerThread = new Thread(poller, getName() + "-Poller");
             pollerThread.setPriority(threadPriority);
             pollerThread.setDaemon(true);
             pollerThread.start();
 
+            //初始化 接收器 并启动
             startAcceptorThread();
         }
     }
