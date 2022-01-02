@@ -238,6 +238,7 @@ public abstract class AbstractProcessor extends AbstractProcessorLight implement
         RequestInfo rp = request.getRequestProcessor();
         try {
             rp.setStage(org.apache.coyote.Constants.STAGE_SERVICE);
+            //采用适配器方式 异步调用Engine
             if (!getAdapter().asyncDispatch(request, response, status)) {
                 setErrorState(ErrorState.CLOSE_NOW, null);
             }
