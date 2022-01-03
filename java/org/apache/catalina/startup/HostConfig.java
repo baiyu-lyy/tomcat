@@ -314,6 +314,7 @@ public class HostConfig implements LifecycleListener {
         if (event.getType().equals(Lifecycle.PERIODIC_EVENT)) {
             check();
         } else if (event.getType().equals(Lifecycle.BEFORE_START_EVENT)) {
+            //创建文件路径
             beforeStart();
         } else if (event.getType().equals(Lifecycle.START_EVENT)) {
             start();
