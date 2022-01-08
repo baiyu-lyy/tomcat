@@ -701,12 +701,14 @@ final class ApplicationDispatcher implements AsyncDispatcher, RequestDispatcher 
         }
 
         // Get the FilterChain Here
+        //创建过滤器链
         ApplicationFilterChain filterChain =
                 ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
 
         // Call the service() method for the allocated servlet instance
         try {
             // for includes/forwards
+            // 执行过滤器
             if ((servlet != null) && (filterChain != null)) {
                filterChain.doFilter(request, response);
              }

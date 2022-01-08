@@ -165,18 +165,21 @@ final class StandardWrapperValve extends ValveBase {
         request.setAttribute(Globals.DISPATCHER_REQUEST_PATH_ATTR,
                 requestPathMB);
         // Create the filter chain for this request
+        // 创建过滤器链-请求
         ApplicationFilterChain filterChain =
                 ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
 
         // Call the filter chain for this request
         // NOTE: This also calls the servlet's service() method
         Container container = this.container;
+        //执行过滤器
         try {
             if ((servlet != null) && (filterChain != null)) {
                 // Swallow output if needed
                 if (context.getSwallowOutput()) {
                     try {
                         SystemLogHandler.startCapture();
+                        //执行具体的Servlet
                         if (request.isAsyncDispatching()) {
                             request.getAsyncContextInternal().doInternalDispatch();
                         } else {
@@ -190,6 +193,7 @@ final class StandardWrapperValve extends ValveBase {
                         }
                     }
                 } else {
+                    //执行具体的Servlet
                     if (request.isAsyncDispatching()) {
                         request.getAsyncContextInternal().doInternalDispatch();
                     } else {
